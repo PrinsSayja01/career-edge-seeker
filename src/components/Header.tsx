@@ -1,6 +1,8 @@
+
 import { Button } from "@/components/ui/button";
 import { FileText, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,18 +12,21 @@ const Header = () => {
       <div className="container mx-auto px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-primary">
               <FileText className="h-5 w-5 text-white" />
             </div>
             <span className="text-xl font-display font-bold text-foreground">ResumeAI</span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
               Features
             </a>
+            <Link to="/cv-analysis" className="text-muted-foreground hover:text-foreground transition-colors">
+              CV Analysis
+            </Link>
             <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
               Pricing
             </a>
@@ -56,6 +61,9 @@ const Header = () => {
               <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors py-2">
                 Features
               </a>
+              <Link to="/cv-analysis" className="text-muted-foreground hover:text-foreground transition-colors py-2">
+                CV Analysis
+              </Link>
               <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors py-2">
                 Pricing
               </a>
