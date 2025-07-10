@@ -5,15 +5,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Upload, FileText, CheckCircle, AlertCircle, TrendingUp } from "lucide-react";
+import { Upload, FileText, CheckCircle, AlertCircle, TrendingUp, Wifi, WifiOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Header from "@/components/Header";
+import { useResumeAnalysis } from "@/hooks/useResumeAnalysis";
+import { toast } from "sonner";
+import { getUserFriendlyErrorMessage } from "@/lib/errorHandler";
+import BackendStatus from "@/components/BackendStatus";
 
 const CVAnalysis = () => {
   const [jobDescription, setJobDescription] = useState("");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<any>(null);
+  
+  const resumeAnalysis = useResumeAnalysis();
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -23,32 +27,27 @@ const CVAnalysis = () => {
   };
 
   const handleAnalyze = async () => {
-    if (!jobDescription.trim() || !uploadedFile) return;
+    if (!jobDescription.trim() || !uploadedFile) {
+      toast.error("Please provide both job description and resume file");
+      return;
+    }
     
-    setIsAnalyzing(true);
-    
-    // Simulate API call - replace with actual backend integration
-    setTimeout(() => {
-      setAnalysisResult({
-        atsScore: 72,
-        matchPercentage: 68,
-        missingKeywords: [
-          "Python", "Machine Learning", "Data Analysis", "SQL", "Git"
-        ],
-        strengths: [
-          "Strong communication skills",
-          "Project management experience",
-          "Team leadership background"
-        ],
-        recommendations: [
-          "Add specific programming languages mentioned in the job description",
-          "Include quantifiable achievements with metrics",
-          "Highlight relevant certifications",
-          "Add keywords related to the specific industry"
-        ]
+    try {
+      const result = await resumeAnalysis.mutateAsync({
+        jobDescription,
+        resumeFile: uploadedFile,
       });
-      setIsAnalyzing(false);
-    }, 3000);
+      
+      if (result.success) {
+        toast.success("Analysis completed successfully!");
+      } else {
+        toast.error(result.error || "Analysis failed");
+      }
+    } catch (error) {
+      console.error("Analysis error:", error);
+      const errorMessage = getUserFriendlyErrorMessage(error);
+      toast.error(errorMessage);
+    }
   };
 
   return (
@@ -136,27 +135,30 @@ const CVAnalysis = () => {
           <div className="text-center mb-8">
             <Button
               onClick={handleAnalyze}
-              disabled={!jobDescription.trim() || !uploadedFile || isAnalyzing}
+              disabled={!jobDescription.trim() || !uploadedFile || resumeAnalysis.isPending}
               size="lg"
               variant="gradient"
               className="px-8"
             >
-              {isAnalyzing ? (
-                <>
+              {resumeAnalysis.isPending ? (
+                <div className="flex items-center">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                   Analyzing...
-                </>
+                </div>
               ) : (
-                <>
+                <div className="flex items-center">
                   <TrendingUp className="mr-2 h-4 w-4" />
                   Analyze CV
-                </>
+                </div>
               )}
             </Button>
           </div>
 
+          {/* Backend Status */}
+          <BackendStatus className="mb-6" />
+
           {/* Analysis Results */}
-          {analysisResult && (
+          {resumeAnalysis.data?.success && resumeAnalysis.data.data && (
             <div className="space-y-6">
               {/* ATS Score Card */}
               <Card>
@@ -169,7 +171,7 @@ const CVAnalysis = () => {
                       <div className="relative w-24 h-24 mx-auto mb-4">
                         <div className="w-24 h-24 rounded-full border-8 border-muted flex items-center justify-center">
                           <span className="text-2xl font-bold text-primary">
-                            {analysisResult.atsScore}
+                            {resumeAnalysis.data.data.atsScore}
                           </span>
                         </div>
                       </div>
@@ -181,7 +183,7 @@ const CVAnalysis = () => {
                       <div className="relative w-24 h-24 mx-auto mb-4">
                         <div className="w-24 h-24 rounded-full border-8 border-accent flex items-center justify-center">
                           <span className="text-2xl font-bold text-accent-foreground">
-                            {analysisResult.matchPercentage}%
+                            {resumeAnalysis.data.data.matchPercentage}%
                           </span>
                         </div>
                       </div>
@@ -205,7 +207,7 @@ const CVAnalysis = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {analysisResult.missingKeywords.map((keyword: string, index: number) => (
+                    {resumeAnalysis.data.data.missingKeywords.map((keyword: string, index: number) => (
                       <span
                         key={index}
                         className="px-3 py-1 bg-warning/10 text-warning border border-warning/20 rounded-full text-sm"
@@ -230,7 +232,7 @@ const CVAnalysis = () => {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {analysisResult.strengths.map((strength: string, index: number) => (
+                    {resumeAnalysis.data.data.strengths.map((strength: string, index: number) => (
                       <li key={index} className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-accent" />
                         <span>{strength}</span>
@@ -250,7 +252,7 @@ const CVAnalysis = () => {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
-                    {analysisResult.recommendations.map((rec: string, index: number) => (
+                    {resumeAnalysis.data.data.recommendations.map((rec: string, index: number) => (
                       <li key={index} className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold">
                           {index + 1}

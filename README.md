@@ -1,73 +1,163 @@
-# Welcome to your Lovable project
+# Career Edge Seekar - Resume Analysis Frontend
 
-## Project info
+A modern React application for analyzing resumes and CVs against job descriptions, providing ATS scores and improvement recommendations.
 
-**URL**: https://lovable.dev/projects/00188144-b44d-49fc-9f4e-53f35d47079f
+## 🚀 Quick Start
 
-## How can I edit this code?
+### One-Command Setup
+```bash
+npm run setup
+```
 
-There are several ways of editing your application.
+### Manual Setup
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-**Use Lovable**
+2. **Configure environment**
+   ```bash
+   cp .env.example .env
+   ```
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/00188144-b44d-49fc-9f4e-53f35d47079f) and start prompting.
+3. **Start development server**
+   ```bash
+   npm run dev
+   ```
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🔧 Backend Integration
 
-**Use your preferred IDE**
+This frontend connects to the `advanced-resume-analyzer` backend. For complete setup instructions, see [backend-integration.md](./backend-integration.md).
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Quick Backend Setup
+1. Clone the backend repository to the parent directory:
+   ```bash
+   git clone https://github.com/your-username/advanced-resume-analyzer.git ../advanced-resume-analyzer
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+2. Run the setup script:
+   ```bash
+   npm run setup
+   ```
 
-Follow these steps:
+3. Start both services:
+   ```bash
+   # Terminal 1 - Backend
+   cd ../advanced-resume-analyzer
+   source venv/bin/activate
+   uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+   # Terminal 2 - Frontend
+   npm run dev
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🛠️ Available Scripts
 
-# Step 3: Install the necessary dependencies.
-npm i
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run setup` - Automated setup for both frontend and backend
+- `npm run check-backend` - Test backend connection
+- `npm run start:full` - Start with backend health check
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## 🌟 Features
+
+- **CV Analysis**: Upload resume and job description for automated analysis
+- **ATS Scoring**: Get ATS compatibility scores and recommendations
+- **Missing Keywords**: Identify important keywords missing from your CV
+- **Strengths Analysis**: Highlight matching skills and experiences
+- **Improvement Suggestions**: Get actionable recommendations
+- **Real-time Backend Status**: Monitor connection to analysis backend
+- **Modern UI**: Built with shadcn/ui and Tailwind CSS
+
+## 🏗️ Tech Stack
+
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **State Management**: React Query (@tanstack/react-query)
+- **Icons**: Lucide React
+- **Forms**: React Hook Form with Zod validation
+- **Notifications**: Sonner
+
+## 📁 Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # shadcn/ui components
+│   ├── Header.tsx      # Navigation header
+│   └── BackendStatus.tsx # Backend connection indicator
+├── pages/              # Page components
+│   ├── Index.tsx       # Home page
+│   ├── CVAnalysis.tsx  # Main CV analysis page
+│   └── NotFound.tsx    # 404 page
+├── lib/                # Utility libraries
+│   ├── api.ts          # API service configuration
+│   ├── utils.ts        # General utilities
+│   └── errorHandler.ts # Error handling utilities
+├── hooks/              # Custom React hooks
+│   └── useResumeAnalysis.ts # Resume analysis state management
+└── utils/              # Additional utilities
+    └── testConnection.ts # Backend connection testing
+```
+
+## 🔗 API Integration
+
+The application connects to the backend through these endpoints:
+
+- `GET /api/v1/health` - Backend health check
+- `POST /api/v1/analyze` - Resume analysis
+- `POST /api/v1/upload` - File upload (optional)
+- `GET /api/v1/history` - Analysis history (optional)
+
+## 🐛 Troubleshooting
+
+### Backend Not Connecting
+1. Check if backend is running: `npm run check-backend`
+2. Ensure backend is on port 8000
+3. Verify CORS configuration in backend
+4. Check browser console for errors
+
+### Common Issues
+- **File Upload Errors**: Ensure files are PDF or DOCX format, under 5MB
+- **CORS Errors**: Backend must allow requests from `http://localhost:5173`
+- **Network Errors**: Check that backend server is running and accessible
+
+## 📖 Documentation
+
+- [Backend Integration Guide](./backend-integration.md) - Detailed setup instructions
+- [API Documentation](./backend-integration.md#expected-backend-api-endpoints) - Backend API specification
+
+## 🚀 Deployment
+
+### Development
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Production
+```bash
+npm run build
+npm run preview
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Environment Variables
+```env
+VITE_API_URL=http://localhost:8000
+VITE_API_BASE_URL=http://localhost:8000/api/v1
+```
 
-**Use GitHub Codespaces**
+For production, update these URLs to point to your deployed backend.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🤝 Contributing
 
-## What technologies are used for this project?
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test the integration
+5. Submit a pull request
 
-This project is built with:
+## 📄 License
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/00188144-b44d-49fc-9f4e-53f35d47079f) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is licensed under the MIT License.

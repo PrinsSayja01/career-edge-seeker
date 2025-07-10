@@ -1,5 +1,5 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "career-edge-seekar",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,7 +8,10 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "setup": "./setup.sh",
+    "check-backend": "curl -f http://localhost:8000/api/v1/health || echo 'Backend not running. Please start the backend server first.'",
+    "start:full": "echo 'Starting full-stack application...' && npm run check-backend && npm run dev"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

@@ -22,3 +22,29 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Backend related
+uploads/
+*.pyc
+__pycache__/
+venv/
+.venv/
+
+# OS generated files
+Thumbs.db
+
+# Temporary files
+.tmp/
+tmp/
+
+# IDE files
+*.swp
+*.swo
+*~
